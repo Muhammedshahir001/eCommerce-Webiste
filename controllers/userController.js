@@ -249,7 +249,7 @@ const forgotSubmit = (req, res) => {
 //login------------------------------------------------------
 const getLogin = (req, res) => {
   try {
-    res.render("user/Login");
+    res.render("user/login");
   } catch (error) {
     console.log(error.message);
   }
@@ -270,10 +270,10 @@ const postlogin = async (req, res) => {
         req.flash("success", "login successfully.");
         res.redirect("/");
       } else {
-        res.render("user/Login", { message: "Invalid username and password" });
+        res.render("user/login", { message: "Invalid username and password" });
       }
     } else {
-      res.render("user/Login", { message: "Invalid username and password" });
+      res.render("user/login", { message: "Invalid username and password" });
     }
   } catch (error) {
     console.log(error.message);
@@ -604,7 +604,7 @@ const getcart = async (req, res) => {
         });
       }
     } else {
-      res.redirect("/Login");
+      res.redirect("/login");
     }
   } catch (error) {
     console.log(error);
@@ -920,7 +920,7 @@ const getwhishlist = async (req, res) => {
         });
       }
     } else {
-      res.redirect("/Login");
+      res.redirect("/login");
     }
   } catch (error) {
     console.log(error);
@@ -1317,7 +1317,7 @@ const verifyPayment = async (req, res) => {
         res.json({ onlineSuccess: true });
       }
     } else {
-      res.redirect("/Login");
+      res.redirect("/login");
     }
   } catch (error) {
     res.redirect("/serverERR", { message: error.message });
@@ -1334,7 +1334,7 @@ const getOrder = async (req, res) => {
       const orderData = await Order.find({ user: userData._id });
       res.render("user/order", { user: req.session.name, data: orderData });
     } else {
-      res.redirect("/Login");
+      res.redirect("/login");
     }
   } catch (error) {
     console.log(error.message);
@@ -1364,7 +1364,7 @@ const singleOrder = async (req, res) => {
         }
       }
     } else {
-      res.redirect("/Login");
+      res.redirect("/login");
     }
   } catch (error) {
     res.redirect("/serverERR", { message: error.message });
