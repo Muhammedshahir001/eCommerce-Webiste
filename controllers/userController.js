@@ -249,7 +249,7 @@ const forgotSubmit = (req, res) => {
 //login------------------------------------------------------
 const getLogin = (req, res) => {
   try {
-    res.render("user/Login");
+    res.render("user/login");
   } catch (error) {
     console.log(error.message);
   }
@@ -270,10 +270,10 @@ const postlogin = async (req, res) => {
         req.flash("success", "login successfully.");
         res.redirect("/");
       } else {
-        res.render("user/Login", { message: "Invalid username and password" });
+        res.render("user/login", { message: "Invalid username and password" });
       }
     } else {
-      res.render("user/Login", { message: "Invalid username and password" });
+      res.render("user/login", { message: "Invalid username and password" });
     }
   } catch (error) {
     console.log(error.message);
@@ -604,7 +604,7 @@ const getcart = async (req, res) => {
         });
       }
     } else {
-      res.redirect("/Login");
+      res.redirect("/login");
     }
   } catch (error) {
     console.log(error);
@@ -920,7 +920,7 @@ const getwhishlist = async (req, res) => {
         });
       }
     } else {
-      res.redirect("/Login");
+      res.redirect("/login");
     }
   } catch (error) {
     console.log(error);
@@ -1141,35 +1141,70 @@ const editaddress = async (req, res) => {
 };
 
 // post add address
+// const editpostaddress = async (req, res) => {
+//   try {
+//     if (req.session.user) {
+//       const addressId = req.body.id;
+//       console.log("🚀 ~ file: userController.js:963 ~ editpostaddress ~ addressId:", addressId)
+//       const userId = req.session.user;
+
+//       const x = await User.findOne({ _id: userId, " address._id": req.body.id })
+//       console.log("🚀 ~ file: userController.js:966 ~ editpostaddress ~ x:", x)
+
+//       await User.updateOne(
+//         { _id: userId, " address._id": addressId },
+
+//         {
+//           $set: {
+//             "address.$.name": req.body.name,
+//             "address.$.town": req.body.town,
+//             "address.$.street": req.body.street,
+//             "address.$.postcode": req.body.postcode,
+//             "address.$.phone": req.body.phone,
+//           },
+//         },
+//       );
+//       res.redirect("/checkout");
+//     }
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+// };
 const editpostaddress = async (req, res) => {
   try {
-    if (req.session.user) {
-      const addressId = req.body.id;
-      console.log("🚀 ~ file: userController.js:963 ~ editpostaddress ~ addressId:", addressId)
-      const userId = req.session.user;
-
-      const x = await User.findOne({ _id: userId, " address._id": req.body.id })
-      console.log("🚀 ~ file: userController.js:966 ~ editpostaddress ~ x:", x)
-
-      await User.updateOne(
-        { _id: userId, " address._id": addressId },
-
-        {
-          $set: {
-            "address.$.name": req.body.name,
-            "address.$.town": req.body.town,
-            "address.$.street": req.body.street,
-            "address.$.postcode": req.body.postcode,
-            "address.$.phone": req.body.phone,
-          },
-        },
-      );
-      res.redirect("/checkout");
+    if (!req.session.user) {
+      throw new Error("User not authenticated");
     }
+
+    const addressId = req.body.id;
+    console.log("🚀 ~ file: userController.js:963 ~ editpostaddress ~ addressId:", addressId);
+
+    const userId = req.session.user;
+
+    const address = await User.findOne({ _id: userId, "address._id": addressId });
+    console.log("🚀 ~ file: userController.js:966 ~ editpostaddress ~ address:", address);
+
+    if (!address) {
+      throw new Error("Address not found");
+    }
+
+    const updatedAddress = {
+      name: req.body.name,
+      town: req.body.town,
+      street: req.body.street,
+      postcode: req.body.postcode,
+      phone: req.body.phone,
+    };
+
+    await User.updateOne({ _id: userId, "address._id": addressId }, { $set: { "address.$": updatedAddress } });
+
+    res.redirect("/checkout");
   } catch (error) {
     console.log(error.message);
+    res.status(500).send("Error updating address");
   }
 };
+
 //deleteAddress
 const deleteAddress = async (req, res) => {
   try {
@@ -1317,7 +1352,7 @@ const verifyPayment = async (req, res) => {
         res.json({ onlineSuccess: true });
       }
     } else {
-      res.redirect("/Login");
+      res.redirect("/login");
     }
   } catch (error) {
     res.redirect("/serverERR", { message: error.message });
@@ -1334,7 +1369,7 @@ const getOrder = async (req, res) => {
       const orderData = await Order.find({ user: userData._id });
       res.render("user/order", { user: req.session.name, data: orderData });
     } else {
-      res.redirect("/Login");
+      res.redirect("/login");
     }
   } catch (error) {
     console.log(error.message);
@@ -1364,7 +1399,7 @@ const singleOrder = async (req, res) => {
         }
       }
     } else {
-      res.redirect("/Login");
+      res.redirect("/login");
     }
   } catch (error) {
     res.redirect("/serverERR", { message: error.message });

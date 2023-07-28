@@ -85,7 +85,13 @@
                 <a class="nav-link" href="/whishlist">Whishlist</a>
               </li>
 
-              <% if (typeof user !=='undefined' ) { %>
+             
+                <% if (typeof user == "undefined") { %>
+                  <li class="nav-item">
+                    <a class="nav-link" href="login"> login</a>
+                  </li>
+                 
+                   <% } else if (user) { %>
                 <li class="nav-item submenu dropdown">
                   <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                     aria-expanded="false">
@@ -111,11 +117,6 @@
               </li>
               </li>
               <% } %>
-                <% if (typeof user==='undefined' ) { %>
-                  <li class="nav-item">
-                    <a class="nav-link" href="login">login</a>
-                  </li>
-                  <% } %>
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <li class="nav-item">
