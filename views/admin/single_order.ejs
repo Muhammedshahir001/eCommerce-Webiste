@@ -126,28 +126,44 @@
                 <div class="row g-4">
 
                     <div class="col-sm-12 col-md-6 col-xl-6">
-                        <div class="h-100 bg-light rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-2">
-                                <h5 class="mb-0">User </h5>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-3">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <h6>Name : <%= userData.name %></h6>
-                                    </div>
-                                    <div class="col-12">
-                                        <h6>Id : <%= userData._id %></h6>
-                                    </div>
-                                    <div class="col-12">
-                                        <h6>Email : <%= userData.email %></h6>
-                                    </div>
-                                    <div class="col-12">
-                                        <h6>Number : <%= userData.number %></h6>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                        </div>
+                      <div class="h-100 bg-light rounded p-4">
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <h5 class="mb-0">User</h5>
+    </div>
+    <div class="d-flex align-items-center border-bottom py-3">
+        <div class="row">
+            <div class="col-12">
+                <% if (userData && userData.name) { %>
+                    <h6>Name: <%= userData.name %></h6>
+                <% } else { %>
+                    <p>Name not available</p>
+                <% } %>
+            </div>
+            <div class="col-12">
+                <% if (userData && userData._id) { %>
+                    <h6>Id: <%= userData._id %></h6>
+                <% } else { %>
+                    <p>Id not available</p>
+                <% } %>
+            </div>
+            <div class="col-12">
+                <% if (userData && userData.email) { %>
+                    <h6>Email: <%= userData.email %></h6>
+                <% } else { %>
+                    <p>Email not available</p>
+                <% } %>
+            </div>
+            <div class="col-12">
+                <% if (userData && userData.number) { %>
+                    <h6>Number: <%= userData.number %></h6>
+                <% } else { %>
+                    <p>Number not available</p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+
                     </div>
                     <div class="col-sm-12 col-md-6 col-xl-6">
                         <div class="h-100 bg-light rounded p-4">
@@ -163,7 +179,7 @@
                                         <h6>Number : <%= userData.number %></h6>
                                     </div>
                                     <div class="col-12">
-                                        <h6>Id : <%= orderData._id %></h6>
+                                        <h6>Id : <%= orderData?._id %></h6>
                                     </div>
                                     <div class="col-12">
                                         <h6>Payment Method : <%= orderData.paymentMethod %></h6>
