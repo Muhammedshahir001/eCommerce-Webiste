@@ -1141,35 +1141,70 @@ const editaddress = async (req, res) => {
 };
 
 // post add address
+// const editpostaddress = async (req, res) => {
+//   try {
+//     if (req.session.user) {
+//       const addressId = req.body.id;
+//       console.log("🚀 ~ file: userController.js:963 ~ editpostaddress ~ addressId:", addressId)
+//       const userId = req.session.user;
+
+//       const x = await User.findOne({ _id: userId, " address._id": req.body.id })
+//       console.log("🚀 ~ file: userController.js:966 ~ editpostaddress ~ x:", x)
+
+//       await User.updateOne(
+//         { _id: userId, " address._id": addressId },
+
+//         {
+//           $set: {
+//             "address.$.name": req.body.name,
+//             "address.$.town": req.body.town,
+//             "address.$.street": req.body.street,
+//             "address.$.postcode": req.body.postcode,
+//             "address.$.phone": req.body.phone,
+//           },
+//         },
+//       );
+//       res.redirect("/checkout");
+//     }
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+// };
 const editpostaddress = async (req, res) => {
   try {
-    if (req.session.user) {
-      const addressId = req.body.id;
-      console.log("🚀 ~ file: userController.js:963 ~ editpostaddress ~ addressId:", addressId)
-      const userId = req.session.user;
-
-      const x = await User.findOne({ _id: userId, " address._id": req.body.id })
-      console.log("🚀 ~ file: userController.js:966 ~ editpostaddress ~ x:", x)
-
-      await User.updateOne(
-        { _id: userId, " address._id": addressId },
-
-        {
-          $set: {
-            "address.$.name": req.body.name,
-            "address.$.town": req.body.town,
-            "address.$.street": req.body.street,
-            "address.$.postcode": req.body.postcode,
-            "address.$.phone": req.body.phone,
-          },
-        },
-      );
-      res.redirect("/checkout");
+    if (!req.session.user) {
+      throw new Error("User not authenticated");
     }
+
+    const addressId = req.body.id;
+    console.log("🚀 ~ file: userController.js:963 ~ editpostaddress ~ addressId:", addressId);
+
+    const userId = req.session.user;
+
+    const address = await User.findOne({ _id: userId, "address._id": addressId });
+    console.log("🚀 ~ file: userController.js:966 ~ editpostaddress ~ address:", address);
+
+    if (!address) {
+      throw new Error("Address not found");
+    }
+
+    const updatedAddress = {
+      name: req.body.name,
+      town: req.body.town,
+      street: req.body.street,
+      postcode: req.body.postcode,
+      phone: req.body.phone,
+    };
+
+    await User.updateOne({ _id: userId, "address._id": addressId }, { $set: { "address.$": updatedAddress } });
+
+    res.redirect("/checkout");
   } catch (error) {
     console.log(error.message);
+    res.status(500).send("Error updating address");
   }
 };
+
 //deleteAddress
 const deleteAddress = async (req, res) => {
   try {
